@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f4f6f8;
+    }
+    .calculator-card {
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      max-width: 380px;
+      width: 100%;
+    }
+    h2 {
+      margin-top: 0;
+      color: #333333;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #555555;
+    }
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #cccccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 12px;
+      background-color: #eef5ff;
+      border-radius: 6px;
+      color: #1d3557;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="calculator-card">
+    <h2>Age Calculator</h2>
+    <form onsubmit="calculateAge(event)">
+      <label for="dob">Select Date of Birth:</label>
+      <input type="date" id="dob">
+      <button type="submit">Calculate Age</button>
+    </form>
+    <div id="result" class="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    function calculateAge(event) {
+      if (event) event.preventDefault(); // Prevents page refresh when pressing Enter
+
+      const dobInput = document.getElementById('dob').value;
+      const resultDiv = document.getElementById('result');
+
+      if (!dobInput) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.color = '#d9534f';
+        resultDiv.textContent = 'Please select a valid date of birth.';
+        return;
+      }
+
+      const birthDate = new Date(dobInput);
+      const today = new Date();
+
+      if (birthDate > today) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.color = '#d9534f';
+        resultDiv.textContent = 'Birthdate cannot be in the future!';
+        return;
+      }
+
+      let years = today.getFullYear() - birthDate.getFullYear();
+      let months = today.getMonth() - birthDate.getMonth();
+      let days = today.getDate() - birthDate.getDate();
+
+      // Adjust for negative days (borrow days from previous month)
+      if (days < 0) {
+        months--;
+        const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        days += previousMonth.getDate();
+      }
+
+      // Adjust for negative months
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      resultDiv.style.display = 'block';
+      resultDiv.style.color = '#1d3557';
+      resultDiv.textContent = `You are ${years} years, ${months} months, and ${days} days old.`;
+    }
+  </script>
+
+</body>
+</html>
